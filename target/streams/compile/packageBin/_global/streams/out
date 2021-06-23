@@ -1,0 +1,13 @@
+[0m[[0m[0mdebug[0m] [0m[0mPackaging /Users/andydowell/WebCrawlerForHorses/target/scala-2.12/webcrawlerforhorses_2.12-0.1.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ActorApp$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/andydowell/WebCrawlerForHorses/target/scala-2.12/classes/ActorApp$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ActorApp$delayedInit$body.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/andydowell/WebCrawlerForHorses/target/scala-2.12/classes/ActorApp$delayedInit$body.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ActorApp$CrawlerActor.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/andydowell/WebCrawlerForHorses/target/scala-2.12/classes/ActorApp$CrawlerActor.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ActorApp$CrawlerActor$$anonfun$receive$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/andydowell/WebCrawlerForHorses/target/scala-2.12/classes/ActorApp$CrawlerActor$$anonfun$receive$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ActorApp.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/andydowell/WebCrawlerForHorses/target/scala-2.12/classes/ActorApp.class[0m
+[0m[[0m[0mdebug[0m] [0m[0mDone packaging.[0m
