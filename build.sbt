@@ -10,4 +10,5 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies += "org.jsoup" % "jsoup" % "1.11.3"
+libraryDependencies += "au.com.bytecode" % "opencsv" % "2.4"
 
