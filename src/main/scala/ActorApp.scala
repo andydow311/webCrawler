@@ -6,9 +6,8 @@ import Actors.Worker
 object ActorApp extends App{
 
   //write out titles
-  writeHorseTitleHorseToCSV("src/main/target/165k_clean_horse_data.csv")
-  writeHorseTitleRaceToCSV("src/main/target/165" +
-    "k_clean_race_data.csv")
+ // writeHorseTitleHorseToCSV("src/main/target/90k_clean_horse_data.csv")
+  writeHorseTitleRaceToCSV("src/main/target/90k_clean_race_and_horse_data.csv")
 
   //partone Create System
   val webCrawlingSystem = ActorSystem("crawl")
@@ -31,7 +30,7 @@ object ActorApp extends App{
   val masterFifteen = webCrawlingSystem.actorOf(Props[Worker], "fifteen")
 
 //  //partFour communicate
-  Range(150001,165001).map(n => {
+  Range(60001,90001).map(n => {
     if(n % 15 == 0){
       masterOne ! "%07d".format(n)
     } else if(n % 15 == 1){
@@ -65,10 +64,10 @@ object ActorApp extends App{
     }
   })
 
-  Thread.sleep(900000)
+  Thread.sleep(1800000)
   webCrawlingSystem.terminate
 
-  def writeHorseTitleHorseToCSV(filename:String): Unit = {
+  /*def writeHorseTitleHorseToCSV(filename:String): Unit = {
     val fw = new FileWriter(filename, true)
     try {
       fw.write(
@@ -76,13 +75,13 @@ object ActorApp extends App{
       )
     }
     finally fw.close()
-  }
+  }*/
 
   def writeHorseTitleRaceToCSV(filename:String): Unit = {
     val fw = new FileWriter(filename, true)
     try {
       fw.write(
-        "Horse_id,Date,Pos,Ran,BHA,Type,Course,Distance,Going,Class,Starting Price"+"\n"
+        "ID,NAME,DOB,TRAINER,GENDER,SIRE,DAM,OWNER,DATE,POS,RAN,BHA,TYPE,COURSE,DISTANCE,GOING,CLASS,STARTING PRICE"+"\n"
       )
     }
     finally fw.close()

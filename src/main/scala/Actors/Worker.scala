@@ -15,8 +15,7 @@ class Worker extends Actor{
       println(s"I have received $id to make $url")
       val doc = Jsoup.connect(url).get().toString
       val horse = getHorse(id, doc)
-      writeToCSV(horse)
-      getRaceDetails(id, doc)
+      getRaceDetails(horse, doc)
     }
     case _ =>  println("Nothing received here!!")
   }
@@ -91,7 +90,7 @@ class Worker extends Actor{
 
   }
 
-  def getRaceDetails(id:String, doc:String): Unit ={
+  def getRaceDetails(horse: Array[String] , doc:String): Unit ={
     val thisdoc = doc.replaceAll("\n","")
 
     val rowRegex: Regex = """<tr class="FormTable__StyledTr-sc-1xr7jxa-3 foFtQM">(.+?)</tr>""".r
@@ -107,35 +106,36 @@ class Worker extends Actor{
 
       for(elems <- otherData){
         if(sequence(0).trim().isEmpty){
-          sequence(0) = cleanRaceData(elems.toString())
+          sequence(0) = cleanRaceData(elems.toString().replace(",",""))
         }else if(sequence(1).trim().isEmpty){
           val x = cleanRaceData(elems.toString())
           if(x.contains("/")){
-            sequence(1) = x.split("/")(0)
-            sequence(2) = x.split("/")(1)
+            sequence(1) = x.split("/")(0).replace(",","")
+            sequence(2) = x.split("/")(1).replace(",","")
           }else{
             sequence(1) = "-"
             sequence(2) = "-"
           }
         }else if(sequence(3).trim().isEmpty){
-          sequence(3) = cleanRaceData(elems.toString())
+          sequence(3) = cleanRaceData(elems.toString().replace(",",""))
         }else if(sequence(4).trim().isEmpty){
-          sequence(4) = cleanRaceData(elems.toString())
+          sequence(4) = cleanRaceData(elems.toString().replace(",",""))
         }else if(sequence(5).trim().isEmpty){
-          sequence(5) = cleanRaceData(elems.toString())
+          sequence(5) = cleanRaceData(elems.toString().replace(",",""))
         }else if(sequence(6).trim().isEmpty){
-          sequence(6) = cleanRaceData(elems.toString())
+          sequence(6) = cleanRaceData(elems.toString().replace(",",""))
         }else if(sequence(7).trim().isEmpty){
-          sequence(7) = cleanRaceData(elems.toString())
+          sequence(7) = cleanRaceData(elems.toString().replace(",",""))
         }else if(sequence(8).trim().isEmpty){
-          sequence(8) = cleanRaceData(elems.toString())
+          sequence(8) = cleanRaceData(elems.toString().replace(",",""))
         }else if(sequence(9).trim().isEmpty){
-          sequence(9) = cleanRaceData(elems.toString())
+          sequence(9) = cleanRaceData(elems.toString().replace(",",""))
         }
 
       }
 
-      writeRaceToCSV(id,sequence)
+
+      writeRaceToCSV(horse,sequence)
 
     }
 
@@ -174,21 +174,12 @@ class Worker extends Actor{
       .trim()
    }
 
-  def writeToCSV(horse:Array[String]): Unit = {
-    val fw = new FileWriter("src/main/target/165k_clean_horse_data.csv", true)
-    try {
-      fw.write(
-        horse.toStream.mkString(",") +"\n"
-      )
-    }
-    finally fw.close()
-  }
 
-  def writeRaceToCSV(id:String, horse:Seq[String]): Unit = {
-    val fw = new FileWriter("src/main/target/165k_clean_race_data.csv", true)
+  def writeRaceToCSV(horse: Array[String] , race: Array[String]): Unit = {
+    val fw = new FileWriter("src/main/target/90k_clean_race_and_horse_data.csv", true)
     try {
       fw.write(
-        id+","+horse.toStream.mkString(",") +"\n"
+        horse.mkString(",")+","+race.mkString(",") +"\n"
       )
     }
     finally fw.close()
@@ -202,6 +193,7 @@ class Worker extends Actor{
                    sire: String,
                    dam: String,
                    owner: String)
+
 
 }
 
