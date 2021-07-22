@@ -5,9 +5,7 @@ import Actors.Worker
 
 object ActorApp extends App{
 
-  //write out titles
- // writeHorseTitleHorseToCSV("src/main/target/90k_clean_horse_data.csv")
-  writeHorseTitleRaceToCSV("src/main/target/90k_clean_race_and_horse_data.csv")
+  writeHorseTitleRaceToCSV("src/main/target/2K_clean_race_and_horse_data_with_age_and_pos_maps.csv")
 
   //partone Create System
   val webCrawlingSystem = ActorSystem("crawl")
@@ -28,60 +26,66 @@ object ActorApp extends App{
   val masterThirteen = webCrawlingSystem.actorOf(Props[Worker], "thirteen")
   val masterFourteen = webCrawlingSystem.actorOf(Props[Worker], "fourteen")
   val masterFifteen = webCrawlingSystem.actorOf(Props[Worker], "fifteen")
+  val masterSixteen = webCrawlingSystem.actorOf(Props[Worker], "sixteen")
+  val masterSeventeen = webCrawlingSystem.actorOf(Props[Worker], "seventeen")
+  val masterEightteen = webCrawlingSystem.actorOf(Props[Worker], "eightteen")
+  val masterNineteen = webCrawlingSystem.actorOf(Props[Worker], "nineteen")
+  val masterTwenty = webCrawlingSystem.actorOf(Props[Worker], "twenty")
 
-//  //partFour communicate
-  Range(60001,90001).map(n => {
-    if(n % 15 == 0){
+
+  //  //partFour communicate
+  Range(0,100001).map(n => {
+    if(n % 20 == 0){
       masterOne ! "%07d".format(n)
-    } else if(n % 15 == 1){
+    } else if(n % 20 == 1){
       masterTwo ! "%07d".format(n)
-    }else if(n % 15 == 2){
+    }else if(n % 20 == 2){
       masterThree ! "%07d".format(n)
-    } else if(n % 15 == 3) {
+    } else if(n % 20 == 3) {
       masterFour ! "%07d".format(n)
-    }else if(n % 15 == 4){
+    }else if(n % 20 == 4){
       masterFive ! "%07d".format(n)
-    } else if(n % 15 == 5) {
+    } else if(n % 20 == 5) {
       masterSix ! "%07d".format(n)
-    }else if(n % 15 == 6){
+    }else if(n % 20 == 6){
       masterSeven ! "%07d".format(n)
-    } else if(n % 15 == 7) {
+    } else if(n % 20 == 7) {
       masterEight ! "%07d".format(n)
-    } else if(n % 15 == 8) {
+    } else if(n % 20 == 8) {
       masterNine ! "%07d".format(n)
-    } else if(n % 15 == 9) {
+    } else if(n % 20 == 9) {
       masterTen ! "%07d".format(n)
-    }else if(n % 15 == 10) {
+    }else if(n % 20 == 10) {
       masterEleven ! "%07d".format(n)
-    }else if(n % 15 == 11) {
+    }else if(n % 20 == 11) {
       masterTwelve ! "%07d".format(n)
-    }else if(n % 15 == 12) {
+    }else if(n % 20 == 12) {
       masterThirteen ! "%07d".format(n)
-    }else if(n % 15 == 13) {
+    }else if(n % 20 == 13) {
       masterFourteen ! "%07d".format(n)
-    }else{
+    }else if(n % 20 == 14) {
       masterFifteen ! "%07d".format(n)
+    }else if(n % 20 == 15) {
+      masterSixteen ! "%07d".format(n)
+    }else if(n % 20 == 16) {
+      masterSeventeen ! "%07d".format(n)
+    }else if(n % 20 == 17) {
+      masterEightteen ! "%07d".format(n)
+    }else if(n % 20 == 18) {
+      masterNineteen ! "%07d".format(n)
+    } else{
+      masterTwenty ! "%07d".format(n)
     }
   })
 
-  Thread.sleep(1800000)
+  Thread.sleep(2000000)
   webCrawlingSystem.terminate
-
-  /*def writeHorseTitleHorseToCSV(filename:String): Unit = {
-    val fw = new FileWriter(filename, true)
-    try {
-      fw.write(
-        "ID,NAME,DOB,TRAINER,GENDER,SIRE,DAM,OWNER"+"\n"
-      )
-    }
-    finally fw.close()
-  }*/
 
   def writeHorseTitleRaceToCSV(filename:String): Unit = {
     val fw = new FileWriter(filename, true)
     try {
       fw.write(
-        "ID,NAME,DOB,TRAINER,GENDER,SIRE,DAM,OWNER,DATE,POS,RAN,BHA,TYPE,COURSE,DISTANCE,GOING,CLASS,STARTING PRICE"+"\n"
+        "ID,NAME,DOB,AGE OF HORSE,TRAINER,GENDER,SIRE,DAM,OWNER,DATE,POS,RAN,BHA,TYPE,COURSE,DISTANCE,GOING,CLASS,STARTING PRICE,POS_LABEL"+"\n"
       )
     }
     finally fw.close()
