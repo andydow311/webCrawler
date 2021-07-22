@@ -1,12 +1,17 @@
 package Actors
 import java.io.FileWriter
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import java.util.Locale
+
 import akka.actor.Actor
+import org.joda.time.format.DateTimeFormat
+
 import scala.util.matching.Regex
 import org.jsoup._
-import scala.util.control.Breaks._
 
 class Worker extends Actor{
-
+  //Todo = This Needs changing so that it persists to a relational DB
   val arrays = Set()
 
   def receive: PartialFunction[Any,Unit] ={
@@ -36,6 +41,8 @@ class Worker extends Actor{
 
     val dob = getDob(clean(horseData(0).toString()))
 
+    val age  = convertDobToMonths(dob.trim)
+
     val trainer = getTrainer(clean(horseData(1).toString())).replace(",","")
 
     val sex = clean(horseData(2).toString())
@@ -52,6 +59,7 @@ class Worker extends Actor{
         id,
         name,
         dob,
+        age.toString,
         trainer,
         sex,
         sire,
@@ -69,6 +77,7 @@ class Worker extends Actor{
         id,
         name,
         dob,
+        age.toString,
         trainer,
         sex,
         sire,
@@ -81,6 +90,7 @@ class Worker extends Actor{
         id,
         name,
         dob,
+        age.toString,
         trainer,
         sex,
         "-",
@@ -100,7 +110,7 @@ class Worker extends Actor{
     val rows = rowRegex.findAllMatchIn(thisdoc).toList
 
     for (elem <- rows) {
-      val sequence = Array("","","","","","","","","","")
+      val sequence = Array("","","","","","","","","","","")
 
       val otherData  = otherRegex.findAllMatchIn(elem.toString()).toList
 
@@ -111,6 +121,7 @@ class Worker extends Actor{
           val x = cleanRaceData(elems.toString())
           if(x.contains("/")){
             sequence(1) = x.split("/")(0).replace(",","")
+            sequence(10) = mapPos(x.split("/")(0).replace(",","")).toString
             sequence(2) = x.split("/")(1).replace(",","")
           }else{
             sequence(1) = "-"
@@ -141,9 +152,17 @@ class Worker extends Actor{
 
   }
 
+  def mapPos(pos:String): Double ={
+    if(pos.trim.equals("1") || pos.trim.equals("2") || pos.trim.equals("3")){
+      1
+    }else{
+      0
+    }
+
+  }
 
   def cleanRaceData(str:String) :String = {
-      val output = str.replaceAll("<td class=\"FormTable__StyledTd-sc-1xr7jxa-4 iSKYZy\">","")
+    val output = str.replaceAll("<td class=\"FormTable__StyledTd-sc-1xr7jxa-4 iSKYZy\">","")
       .replaceAll("</td>","")
       .replaceAll("<td class=\"FormTable__StyledTd-sc-1xr7jxa-4 iSKYZy\">","")
       .replaceAll("<a href=\".*\">","")
@@ -159,7 +178,7 @@ class Worker extends Actor{
 
   def clean(str: String) : String = {
     str.replaceAll("<td class=\"Header__DataValue-xeaizz-4 cUoUJA\">","")
-       .replaceAll("</td>", "")
+      .replaceAll("</td>", "")
       .trim()
   }
 
@@ -172,11 +191,11 @@ class Worker extends Actor{
     trainer.replaceAll("<a href=\"/racing/profiles/trainer/\\d+\">", "")
       .replaceAll("</a>","")
       .trim()
-   }
+  }
 
 
   def writeRaceToCSV(horse: Array[String] , race: Array[String]): Unit = {
-    val fw = new FileWriter("src/main/target/90k_clean_race_and_horse_data.csv", true)
+    val fw = new FileWriter("src/main/target/2K_clean_race_and_horse_data_with_age_and_pos_maps.csv", true)
     try {
       fw.write(
         horse.mkString(",")+","+race.mkString(",") +"\n"
@@ -185,14 +204,33 @@ class Worker extends Actor{
     finally fw.close()
   }
 
-  case class Horse(id: String,
-                   name: String,
-                   dob: String,
-                   trainer: String,
-                   sex: String,
-                   sire: String,
-                   dam: String,
-                   owner: String)
+  def convertDobToMonths(birthDate:String): Long={
+
+    val dayStr = birthDate.trim().split(" ")(0)
+    val year = birthDate.trim().split(" ")(2)
+    val month = birthDate.trim().split(" ")(1).toUpperCase
+    val day = """\d+""".r findFirstIn(dayStr)
+    val today = LocalDate.now
+
+
+    val format = DateTimeFormat.forPattern("MMM")
+    val instance = format.withLocale(Locale.ENGLISH).parseDateTime(month)
+
+    val yearFormat = DateTimeFormat.forPattern("YYYY")
+    val yearInstance = yearFormat.withLocale(Locale.ENGLISH).parseDateTime(year)
+
+    val month_number = instance.getMonthOfYear
+    val month_text = instance.monthOfYear.getAsText(Locale.ENGLISH)
+
+    val  year_number = yearInstance.getYear
+
+    val birthday = LocalDate.of(year_number,month_number, day.get.toInt)
+
+    ChronoUnit.MONTHS.between(birthday, today)
+
+
+  }
+
 
 
 }
